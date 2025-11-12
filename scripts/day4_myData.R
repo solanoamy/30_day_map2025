@@ -1,6 +1,6 @@
 library(tidyverse)
 library(dplyr)
-library(ggpubr)
+library(ggfun)
 library(sf)
 library(tmap)
 library(systemfonts)
@@ -167,21 +167,22 @@ cropped_lines <- st_crop(amy_lines, cropped_counties)
 cropped_water <- st_crop(philly_hydro, cropped_counties)
 
 # deciding to use both layers in the same map because the other one looks too empty
-ggplot() +
+my_data_map <- 
+  ggplot() +
   geom_sf(data=cropped_counties, fill="#1a1e24",color="#2a384f")+
   geom_sf(data=cropped_water, fill="#30394a", color="transparent")+
   geom_sf(data=cropped_lines, aes(color=mode), lwd=0.6)+
   geom_sf(data=stations.sf, aes(fill=mode),
           shape = 21, color="#c9cfd1", size=1.2, stroke = 0.1)+
-  scale_color_manual(values = c("#593b31","#69758a","#437bba","#048200"),
+  scale_color_manual(values = c("#6e4538","#69758a","#0e64c7","#056e0b"),
                      name=NULL)+
-  scale_fill_manual(values = c("#593b31","#69758a","#437bba","#048200")
+  scale_fill_manual(values = c("#593b31","#69758a","#437bba","#056e0b")
                     )+
   guides(
     color  = guide_legend(position = "inside",
-                          #direction = "horizontal",
+                          direction = "horizontal",
                           # thicker legend lines
-                          override.aes = list(lwd = 3) 
+                          override.aes = list(lwd = 2.5) 
                           ),
     fill = "none"
     )+
@@ -189,14 +190,17 @@ ggplot() +
   scale_x_continuous(expand=c(0,0))+
   scale_y_continuous(expand=c(0,0))+
   labs(title="How I Roll",
-       subtitle="SEPTA Lines I rode: August 2024-July 2025",
+       subtitle="SEPTA Lines I rode August 2024-July 2025",
        caption="Data sources: SEPTA and DVRPC")+
-  #theme_void()+
-  theme(legend.position.inside = c(0.85, 0.15),
-        legend.background = element_rect(fill = "#c9cfd1"),
-        legend.key = element_rect(fill="#c9cfd1"),
-        #legend.margin = margin(t=0.2,b=0.2, l=0.5, r=1),
-        text = element_text(family="SF Pro Text"),
+  theme(legend.position.inside = c(0.671, 0.02),
+        #ggfun helps me round out my legend box
+        legend.background = element_roundrect(fill = "#95979c"),
+        legend.key = element_rect(fill="#95979c"),
+        legend.key.height = unit(0.15,"in"),
+        legend.margin = margin(0,4,0,2),
+        text = element_text(family="SF Pro Display"),
+        legend.text = element_text(face="plain",
+                                   size=6),
         plot.title = element_text(face="bold",
                                   family = "Optima",
                                   color="#69758a",
@@ -209,14 +213,17 @@ ggplot() +
         plot.caption = element_text(color="#95999e",
                                     face = "italic",
                                     size= 6),
-        plot.title.position = "plot",
+        plot.title.position = "panel",
         panel.grid = element_blank(),
         axis.text = element_blank(),
         axis.ticks = element_blank(),
         panel.background = element_rect(fill="#1a1e24"),
-        plot.background = element_rect(fill="#1a1e24"))
+        plot.background = element_rect(colour = "transparent",fill="#1a1e24"),
+        rect = element_rect(fill = NA))
 
+my_data_map
 
+ggsave("outputs/day4_solano.png", my_data_map,height = 5.5, width = 4.8, dpi = 320)
   
   
   
