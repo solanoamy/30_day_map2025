@@ -4,6 +4,8 @@ library(fuzzyjoin)
 library(ggfun)
 library(sf)
 library(systemfonts)
+library(ggrepel)
+library(ggtext)
 
 `%notin%` <- Negate(`%in%`)
 
@@ -44,6 +46,27 @@ venues.sf <-
          observation = case_when(team=="Fulham" ~ 7090.8,
                                  .default = as.numeric(observation)))
 
+#<span style = 'font-size:2pt'></span>
+#<span style = 'font-size:10pt'></span>
+
+
+venues.sf$label <- c("<span style = 'font-size:8pt'>Emirates</span> <img src='https://static.vecteezy.com/system/resources/thumbnails/015/863/617/small/arsenal-logo-on-transparent-background-free-vector.jpg'
+                     width='10' /><br><span style = 'font-size:4pt'>Population density: 16,088 / sq km</span>",
+                     "<span style = 'font-size:8pt'>Stamford Bridge</span> <img src='https://upload.wikimedia.org/wikipedia/sco/thumb/c/cc/Chelsea_FC.svg/480px-Chelsea_FC.svg.png'
+                     width='10' /><br><span style = 'font-size:4pt'>Population density 16,509 / sq km</span>",
+                     "<span style = 'font-size:8pt'>Tottenham Hotspur Stadium</span> <img src='https://logodownload.org/wp-content/uploads/2018/11/tottenham-logo-escudo.png'
+                     height='7' /><br><span style = 'font-size:4pt'>Population density: 6,966 / sq km</span>",
+                     "<span style = 'font-size:8pt'>London Stadium</span> <img src='https://1000logos.net/wp-content/uploads/2018/07/West-Ham-logo.jpg'
+                     width='10' /><br><span style = 'font-size:4pt'>Population density: 6,518 / sq km</span>",
+                     "<span style = 'font-size:8pt'>Craven Cottage</span> <img src='https://cdn.freebiesupply.com/logos/large/2x/fulham-fc-1-logo-png-transparent.png'
+                     width='10' /><br><span style = 'font-size:4pt'>Population density: 7,090 / sq km</span>",
+                     "<span style = 'font-size:8pt'>Selhurst Park</span> <img src='https://1000logos.net/wp-content/uploads/2023/04/Crystal-Palace-Logo-2013.png'
+                     width='10' /><br><span style = 'font-size:4pt'>Population density: 7,681 / sq km</span>",
+                     "<span style = 'font-size:8pt'>Gtech Community Stadium</span> <img src='https://upload.wikimedia.org/wikipedia/en/thumb/2/2a/Brentford_FC_crest.svg/1200px-Brentford_FC_crest.svg.png'
+                     width='10' /><br><span style = 'font-size:4pt'>Population density: 10,303 / sq km</span>",
+                     "<span style = 'font-size:8pt'>Wembley Stadium</span> <img src='https://www.nicepng.com/png/full/904-9044001_wembley-logo-wembley-stadium.png'
+                     width='10' /><br><span style = 'font-size:4pt'>Population density: 7,574 / sq km</span>")
+
 ggplot()+
   geom_sf(data=st_union(real_london), fill = "transparent", lwd=1, color="#360f0f")+
   geom_sf(data=real_london, aes(fill=observation), color = "whitesmoke") +
@@ -51,11 +74,34 @@ ggplot()+
   scale_fill_gradient(low="#f5f5f5",high="#870c01",
                       name="Persons per sq km",
                       labels=function(x) format(x, big.mark = ",", scientific = FALSE)) +
+  ggrepel::geom_label_repel(data=venues.sf,
+                            aes(label=stadium, geometry=geometry),
+                            stat = "sf_coordinates",
+                            min.segment.length = 0) +
   theme(panel.background = element_rect(fill="#f7f7f7"),
         panel.grid = element_blank(),
         axis.text = element_blank(),
         axis.ticks = element_blank())
-2
+
+ggplot()+
+  geom_sf(data=st_union(real_london), fill = "transparent", lwd=1, color="#360f0f")+
+  geom_sf(data=real_london, aes(fill=observation), color = "whitesmoke") +
+  geom_sf(data=venues.sf, size = 2) +
+  scale_fill_gradient(low="#f5f5f5",high="#870c01",
+                      name="Persons per sq km",
+                      labels=function(x) format(x, big.mark = ",", scientific = FALSE)) +
+  geom_richtext(data=venues.sf, aes(label=label, geometry=geometry), stat = "sf_coordinates") +
+  theme(panel.background = element_rect(fill="#f7f7f7"))
+
+
+
+ggplot()+
+  geom_sf(data=st_union(real_london), fill = "transparent", lwd=1, color="#360f0f")+
+  geom_sf(data=venues.sf)+
+  geom_richtext(family = "SF Pro Text",
+                data=venues.sf,
+                aes(label=label, geometry=geometry),
+                stat = "sf_coordinates")
 
 
 
