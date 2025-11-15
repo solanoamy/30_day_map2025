@@ -50,21 +50,21 @@ venues.sf <-
 #<span style = 'font-size:10pt'></span>
 
 
-venues.sf$label <- c("<span style = 'font-size:8pt'>Emirates</span> <img src='https://static.vecteezy.com/system/resources/thumbnails/015/863/617/small/arsenal-logo-on-transparent-background-free-vector.jpg'
-                     width='10' /><br><span style = 'font-size:4pt'>Population density: 16,088 / sq km</span>",
-                     "<span style = 'font-size:8pt'>Stamford Bridge</span> <img src='https://upload.wikimedia.org/wikipedia/sco/thumb/c/cc/Chelsea_FC.svg/480px-Chelsea_FC.svg.png'
+venues.sf$label <- c("<span style = 'font-size:6pt'>**Emirates**</span> <img src='https://upload.wikimedia.org/wikipedia/en/thumb/5/53/Arsenal_FC.svg/1021px-Arsenal_FC.svg.png'
+                     height='8' /><br><span style = 'font-size:4pt'>Population density: 16,088 / sq km</span>",
+                     "<span style = 'font-size:6pt'>**Stamford Bridge**</span> <img src='https://upload.wikimedia.org/wikipedia/sco/thumb/c/cc/Chelsea_FC.svg/480px-Chelsea_FC.svg.png'
                      width='10' /><br><span style = 'font-size:4pt'>Population density 16,509 / sq km</span>",
-                     "<span style = 'font-size:8pt'>Tottenham Hotspur Stadium</span> <img src='https://logodownload.org/wp-content/uploads/2018/11/tottenham-logo-escudo.png'
-                     height='7' /><br><span style = 'font-size:4pt'>Population density: 6,966 / sq km</span>",
-                     "<span style = 'font-size:8pt'>London Stadium</span> <img src='https://1000logos.net/wp-content/uploads/2018/07/West-Ham-logo.jpg'
-                     width='10' /><br><span style = 'font-size:4pt'>Population density: 6,518 / sq km</span>",
-                     "<span style = 'font-size:8pt'>Craven Cottage</span> <img src='https://cdn.freebiesupply.com/logos/large/2x/fulham-fc-1-logo-png-transparent.png'
+                     "<span style = 'font-size:6pt'>**Tottenham Hotspur Stadium**</span> <img src='https://upload.wikimedia.org/wikipedia/en/thumb/b/b4/Tottenham_Hotspur.svg/584px-Tottenham_Hotspur.svg.png'
+                     height='8' /><br><span style = 'font-size:4pt'>Population density: 6,966 / sq km</span>",
+                     "<span style = 'font-size:6pt'>**London Stadium**</span> <img src='https://upload.wikimedia.org/wikipedia/en/thumb/c/c2/West_Ham_United_FC_logo.svg/1079px-West_Ham_United_FC_logo.svg.png'
+                     height='8' /><br><span style = 'font-size:4pt'>Population density: 6,518 / sq km</span>",
+                     "<span style = 'font-size:6pt'>**Craven Cottage**</span> <img src='https://cdn.freebiesupply.com/logos/large/2x/fulham-fc-1-logo-png-transparent.png'
                      width='10' /><br><span style = 'font-size:4pt'>Population density: 7,090 / sq km</span>",
-                     "<span style = 'font-size:8pt'>Selhurst Park</span> <img src='https://1000logos.net/wp-content/uploads/2023/04/Crystal-Palace-Logo-2013.png'
-                     width='10' /><br><span style = 'font-size:4pt'>Population density: 7,681 / sq km</span>",
-                     "<span style = 'font-size:8pt'>Gtech Community Stadium</span> <img src='https://upload.wikimedia.org/wikipedia/en/thumb/2/2a/Brentford_FC_crest.svg/1200px-Brentford_FC_crest.svg.png'
+                     "<span style = 'font-size:6pt'>**Selhurst Park**</span> <img src='https://upload.wikimedia.org/wikipedia/en/thumb/a/a2/Crystal_Palace_FC_logo_%282022%29.svg/962px-Crystal_Palace_FC_logo_%282022%29.svg.png'
+                     height='8' /><br><span style = 'font-size:4pt'>Population density: 7,681 / sq km</span>",
+                     "<span style = 'font-size:6pt'>**Gtech Community Stadium**</span> <img src='https://upload.wikimedia.org/wikipedia/en/thumb/2/2a/Brentford_FC_crest.svg/1200px-Brentford_FC_crest.svg.png'
                      width='10' /><br><span style = 'font-size:4pt'>Population density: 10,303 / sq km</span>",
-                     "<span style = 'font-size:8pt'>Wembley Stadium</span> <img src='https://www.nicepng.com/png/full/904-9044001_wembley-logo-wembley-stadium.png'
+                     "<span style = 'font-size:6pt'>**Wembley Stadium**</span> <img src='https://upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/330px-Flag_of_England.svg.png'
                      width='10' /><br><span style = 'font-size:4pt'>Population density: 7,574 / sq km</span>")
 
 ggplot()+
@@ -76,12 +76,7 @@ ggplot()+
                       labels=function(x) format(x, big.mark = ",", scientific = FALSE)) +
   ggrepel::geom_label_repel(data=venues.sf,
                             aes(label=stadium, geometry=geometry),
-                            stat = "sf_coordinates",
-                            min.segment.length = 0) +
-  theme(panel.background = element_rect(fill="#f7f7f7"),
-        panel.grid = element_blank(),
-        axis.text = element_blank(),
-        axis.ticks = element_blank())
+                            stat = "sf_coordinates")
 
 ggplot()+
   geom_sf(data=st_union(real_london), fill = "transparent", lwd=1, color="#360f0f")+
@@ -90,18 +85,58 @@ ggplot()+
   scale_fill_gradient(low="#f5f5f5",high="#870c01",
                       name="Persons per sq km",
                       labels=function(x) format(x, big.mark = ",", scientific = FALSE)) +
-  geom_richtext(data=venues.sf, aes(label=label, geometry=geometry), stat = "sf_coordinates") +
+  geom_richtext(lineheight = .1,
+                family = "SF Pro Text",
+                data=venues.sf,
+                aes(label=label, geometry=geometry),
+                stat = "sf_coordinates")+
+  theme(panel.background = element_rect(fill="#f7f7f7"))
+
+ggplot()+
+  geom_sf(data=st_union(real_london), fill = "transparent", lwd=1, color="#360f0f")+
+  geom_sf(data=real_london, aes(fill=observation), color = "whitesmoke") +
+  geom_sf(data=venues.sf, size = 2) +
+  scale_fill_gradient(low="#f5f5f5",high="#870c01",
+                      name="Persons per sq km",
+                      labels=function(x) format(x, big.mark = ",", scientific = FALSE)) +
+  geom_richtext(lineheight = .1,
+                family = "SF Pro Text",
+                data=venues.sf %>%
+                  filter(team %in% c("Arsenal","Tottenham","Wembley","West Ham")),
+                aes(label=label, geometry=geometry),
+                stat = "sf_coordinates",
+                position = position_nudge_repel(
+                  x = c(0, 0.18, 0.2, -0.05),
+                  y = c(0.12, 0.2, -0.1, 0.1)
+                ))+
+  geom_richtext(lineheight = .1,
+               family = "SF Pro Text",
+               data=venues.sf %>%
+                 filter(team %notin% c("Arsenal","Tottenham","Wembley","West Ham")),
+               aes(label=label, geometry=geometry),
+               stat = "sf_coordinates",
+               position = position_nudge_repel(
+                 x = c(0.1, -0.2, 0.2, -0.15),
+                 y = c(-0.1, -0.1, -0.1, 0)
+               ))+
   theme(panel.background = element_rect(fill="#f7f7f7"))
 
 
 
 ggplot()+
   geom_sf(data=st_union(real_london), fill = "transparent", lwd=1, color="#360f0f")+
-  geom_sf(data=venues.sf)+
-  geom_richtext(family = "SF Pro Text",
+  geom_sf(data=venues.sf, size = 2) +
+  geom_richtext(lineheight = .1,
+                family = "SF Pro Text",
                 data=venues.sf,
                 aes(label=label, geometry=geometry),
                 stat = "sf_coordinates")
+
+ggplot(venues.sf, aes(label=label, geometry=geometry))+
+  geom_richtext(stat = "sf_coordinates") +
+  geom_sf()+
+  ggrepel::geom_text_repel()
+
 
 
 
